@@ -1,8 +1,9 @@
 import axios from "axios";
 // import {getBrandList} from '../../api/index'
-import { getMakeList } from "../../api/index";
+import { getBrandList , getMakeList } from "../../api/index";
 let state = {
   list: [],
+  car : [],
   num: 1,
   letters: "",
   isShow: false,
@@ -31,13 +32,16 @@ let mutations = {
   },
   showMakeList : (state)=>{
     state.isShowList = true
+  },
+  carList : (state,payload)=>{
+    state.car = payload
   }
 };
 let actions = {
-  listCar: (context, payload) => {
-    return axios.get("/listCar").then(res => {
-      return res;
-    });
+  listCar: ({commit}, payload) => {
+    getBrandList().then(body=>{
+        commit('carList',body.data)
+    })
   },
   getMakeList: ({ commit, state }, payload) => {
     if (payload != state.brandId) {

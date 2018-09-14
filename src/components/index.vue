@@ -3,7 +3,7 @@
     <div class="wrap" id="wrap">
       <div v-for="(value,index) in title" class="title">
         <h3 :id="value">{{value}}</h3>
-        <div class="list" v-for="val in city" @click="getMakeList(val.MasterID)">
+        <div class="list" v-for="val in car" @click="getMakeList(val.MasterID)">
           <dl v-if="val.Spelling.slice(0,1) === value">
             <dt>
               <img :src="val.CoverPhoto" alt="">
@@ -33,9 +33,9 @@
     data() {
       return {
         city: null,
-        title: [],
-        letter: [],
-        height: 0
+        height: 0,
+        title : [],
+        letter : []
       }
     },
     components: {
@@ -48,34 +48,22 @@
       ...mapState({
         list: state => state.app.list,
         letters: state => state.app.letters,
-        isShow: state => state.app.isShow
+        isShow: state => state.app.isShow,
+        car : state => state.app.car
       })
 
     },
     methods: {
-      // calculation(type){
-      //   this.$store.commit('app/calculation',type)
-      // }
       ...mapMutations({
         showLetter: 'app/showLetter',
-        changeLetter: 'app/changeLetter'
+        changeLetter: 'app/changeLetter',
+        carList : 'app/carList',
+        intercept : 'app/intercept'
       }),
       ...mapActions({
         listCar: 'app/listCar',
-        getMakeList: 'app/getMakeList'
+        getMakeList: 'app/getMakeList',
       }),
-      conentList(list) {
-        this.city = list;
-        console.log(list)
-        list.map((item, ind) => {
-          let spli = item.Spelling.slice(0, 1)
-          if (this.title.indexOf(spli) === -1) {
-            this.title.push(spli)
-          }
-        })
-        this.letter = this.title.slice();
-        // this.letter.unshift('#')
-      },
       touchStart(e) {
         this.showLetter(true)
         let letter = e.target.innerHTML;
@@ -100,12 +88,22 @@
       },
       touchEnd() {
         this.showLetter(false)
+      },
+      intercept(){
+        this.car.map((item, ind) => {
+        let spli = item.Spelling.slice(0, 1)
+          if (this.title.indexOf(spli) === -1) {
+            this.title.push(spli)
+          }
+        })
+        this.letter = this.title.slice();
       }
     },
     mounted() {
-      this.listCar().then(res => {
-        this.conentList(res.data.data)
-      })
+      this.listCar()
+      setTimeout(() => {
+        this.intercept()
+      }, (0));
     },
     updated() {
       this.height = 0.37 * window.innerWidth / 750 * 100;
