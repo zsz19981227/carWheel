@@ -103,7 +103,7 @@
       this.listCar()
       setTimeout(() => {
         this.intercept()
-      }, (0));
+      }, 500);
     },
     updated() {
       this.height = 0.37 * window.innerWidth / 750 * 100;
